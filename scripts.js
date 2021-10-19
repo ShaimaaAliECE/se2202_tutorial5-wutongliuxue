@@ -1,12 +1,14 @@
 let nextPlayer = 'X'; // takes a value of either 'X' or 'O' according to the game turns
 
 //initialize the game
-document.getElementById('next-lbl').innerText = nextPlayer;
+
+let nextPlayerLabel = document.getElementById('next-lbl');
+nextPlayerLabel.innerText = " " + nextPlayer;
+
 // use the value stored in the nextPlayer variable to indicate who the next player is
-
-
 //This call will create the buttons needed for the gameboard.
 createGameBoard();
+
 function createGameBoard()
 {
     document.getElementById('c1').innerHTML = `<button id='cell_btn'> </button>`;
@@ -25,55 +27,50 @@ function createGameBoard()
    
 }
 
-// Programatically add 'takeCell' as an event listener to all the buttons on the board
 let btns = document.querySelectorAll('button');
-for (let i=0; i<btns.length; i++)
+
+for (let count=0; count<btns.length; count++)
 {
-    btns[i].addEventListener('click', (event) => {takeCell(event)});
+    btns[count].addEventListener('click', (event) => {takeCell(event)});
 }
 
-// This function will be used to respond to a click event on any of the board buttons.
-function takeCell(event)
-{
-    /*
-        When the button is clicked, the space inside its square brackets is replaced by the value in the nextPlayer before switching it
-    */
+function takeCell (event) {
 
-   let btn = event.target;
-   btn.innerHTML = nextPlayer;
+    event.target.innerText = nextPlayer;
+    event.target.disabled = true;
 
-   if(nextPlayer === 'X'){
-       nextPlayer = 'O';
-   }
-   else{
-       nextPlayer = 'X';
-   }
-    // Make sure the button is clickable only once (I didn't mention how to do that, look it up :) )
-
-    // Check if the game is over
-    if (isGameOver())
-    {
-        let lbl = document.getElementById('game-over-lbl');
-        let header = document.createElement('h1');
-        header.innerText = 'Game over';
-        lbl.appendChild(header);
-        // let the lable with the id 'game-over-lbl' display the words 'Game Over' inside <h1> element
+    if (nextPlayer == 'X'){
+        nextPlayer = 'O';
+    }
+    else{
+        nextPlayer = 'X';
     }
 
-    // I'll leave declaring the winner for your intrinsic motivation, it's not required for this assignment 
+    nextPlayerLabel.innerText = " " + nextPlayer;
+
+    if (isGameOver()) {
+
+        let h1 = document.createElement("h1");
+        let txtNode = document.createTextNode("Game Over!")
+
+        h1.appendChild(txtNode);
+        let gameOverLabel = document.getElementById('game-over-lbl');
+        gameOverLabel.appendChild(h1);
+    }
 }
 
 function isGameOver()
 {
-    let disabled = 0;
-    for (let i = 0; i < btns.length; i++) {
-        if (btns[i].disabled) {
-            disabled++;
-        }
+    let btns = document.querySelectorAll('button');
+    let counter = 0;
+
+    for (let count=0; count<btns.length; count++)
+    {
+        if (btns[count].disabled == true)
+            counter++;
     }
-    if (disabled == 9) {
+    if (counter == btns.length){
         return true;
     }
     return false;
-    // This function returns true if all the buttons are disabled and false otherwise 
 }
